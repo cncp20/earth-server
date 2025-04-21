@@ -1,0 +1,288 @@
+body {
+	margin: 0;
+	padding: 0;
+	/* background-color: #000; */
+	color: white;
+	overflow: hidden;
+	background-image: url("./images/bg.jpg");
+	background-size: cover;
+	background-position: center;
+}
+.container {
+	display: flex;
+	height: 100vh;
+	width: 100vw;
+    overflow: hidden;
+    position: relative;
+}
+
+.mid-container {
+	position: fixed;
+	top: 50%;
+	left: -45vw;
+	transform: translateY(-50%);
+} 
+.mid {
+	width: 80vw;
+	height: 80vw;
+	border-radius: 50%;
+	background-size: cover;
+	box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+.mid-label, .planet-label  {
+    position: absolute;
+    width: 30vw;
+    right: -40vw;
+    top: 50%;
+    border-top: 1px dashed white;
+}
+.mid-label-left, .planet-label-left {
+    font-size: 3vw;
+    color: white;
+    position: absolute;
+    left: -8vw;
+    top: -2vw;
+}
+.mid-label-right, .planet-label-right {
+    font-size: 3.5vw;
+    color: white;
+    position: absolute;
+    right: -21vw;
+    top: -2.4vw;
+    background: #4fcbe4;
+    text-align: center;
+    width: 18vw;
+    border-radius: 20px;
+    line-height: 5vw;
+}
+.solar-system {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+.planet-label-right {
+    background: #bbb;
+}
+
+.planet-body {
+	position: absolute;
+	top: calc(50% - 8vw);
+	left: 2vw;
+	z-index: 12;
+}
+.rotate0 {
+	transform: translateY(-4vw) rotate(-90deg);
+}
+.rotate0 .planet-label {
+	transform: rotate(90deg);
+    width: 49vw;
+    right: -16vw;
+    top: 49vw;
+}
+.rotate1 {
+	transform: rotate(-64.3deg);
+}
+.rotate1 .planet-label {
+	transform: rotate(64.3deg);
+    width: 27vw;
+    right: -19vw;
+    top: 35vw;
+}
+.rotate2 {
+	transform: rotate(-38.6deg);
+}
+.rotate2 .planet-label {
+	transform: rotate(38.6deg);
+    width: 9vw;
+    right: -14vw;
+    top: 21vw;
+}
+.rotate3 {
+	transform: rotate(-13deg);
+}
+.rotate3 .planet-label {
+	transform: rotate(13deg);
+    width: 0vw;
+    right: -8vw;
+    top: 11vw;
+}
+.rotate4 {
+	transform: rotate(13deg);
+}
+.rotate4 .planet-label {
+	transform: rotate(-13deg);
+    width: 0vw;
+    right: -8vw;
+    top: 5vw;
+}
+.rotate5 {
+	transform: rotate(38.6deg);
+}
+.rotate5 .planet-label {
+	transform: rotate(-38.6deg);
+    width: 9vw;
+    right: -13vw;
+    top: -5vw;
+}
+.rotate6 {
+	transform: rotate(64.3deg);
+}
+.rotate6 .planet-label {
+	transform: rotate(-64.3deg);
+    width: 25vw;
+    right: -18vw;
+    top: -19vw;
+}
+.rotate7 {
+	transform: translateY(4vw) rotate(90deg);
+}
+.rotate7 .planet-label {
+	transform: rotate(-90deg);
+    width: 48vw;
+    right: -17vw;
+    top: -32vw;
+}
+
+.planet {
+	width: 16vw;
+	height: 16vw;
+	border-radius: 50%;
+	background-size: cover;
+	position: relative;
+	left: 50vw;
+	box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+.mercury {
+	background-image: url("./images/mercury.png");
+}
+.venus {
+	background-image: url("./images/venus.png");
+}
+.earth {
+	background-image: url("./images/earth.png");
+}
+.mars {
+	background-image: url("./images/mars.png");
+}
+.jupiter {
+	background-image: url("./images/jupiter.png");
+}
+.saturn {
+	background-image: none;
+	box-shadow: none;
+    overflow: visible;
+}
+.saturn::after {
+    width: 200%;
+    height: 150%;
+    content: "";
+    display: block;
+    background-image: url(./images/saturn.png);
+    background-size: cover;
+    position: relative;
+    left: -68%;
+    top: -39%;
+}
+.uranus {
+	background-image: url("./images/uranus.png");
+}
+.neptune {
+	background-image: url("./images/neptune.png");
+}
+.moon {
+	background-image: url("./images/moon.png");
+}
+
+.astronaut {
+    position: absolute;
+	top: calc(50% - 8vw);
+	left: 2vw;
+	z-index: 12;
+    width: 16vw;
+	height: 16vw;
+    animation-iteration-count: 1;
+    transform: rotate(-90deg)
+}
+.astronaut.ani0 {
+    animation: rotateAndTranslate 3s linear;
+}
+.astronaut.ani1 {
+    animation: rotateAndTranslate1 3s linear;
+}
+.astronaut.ani2 {
+    animation: rotateAndTranslate2 3s linear;
+}
+.astronaut.ani3 {
+    animation: rotateAndTranslate3 3s linear;
+}
+.astronaut.ani4 {
+    animation: rotateAndTranslate4 3s linear;
+}
+.astronaut.ani5 {
+    animation: rotateAndTranslate5 3s linear;
+}
+.astronaut.ani6 {
+    animation: rotateAndTranslate6 3s linear;
+}
+.astronaut img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 50vw;
+}
+@keyframes rotateAndTranslate {
+    0% {
+        transform: rotate(-90deg); /* 初始位置 */
+    }
+    100% {
+        transform: rotate(-64.3deg); /* 完成一圈 */
+    }
+}
+@keyframes rotateAndTranslate1 {
+    0% {
+        transform: rotate(-64.3deg); /* 初始位置 */
+    }
+    100% {
+        transform: rotate(-38.6deg); /* 完成一圈 */
+    }
+}
+@keyframes rotateAndTranslate2 {
+    0% {
+        transform: rotate(-38.6deg); /* 初始位置 */
+    }
+    100% {
+        transform: rotate(-13deg); /* 完成一圈 */
+    }
+}
+@keyframes rotateAndTranslate3{
+    0% {
+        transform: rotate(-13deg); /* 初始位置 */
+    }
+    100% {
+        transform: rotate(13deg); /* 完成一圈 */
+    }
+}
+@keyframes rotateAndTranslate4 {
+    0% {
+        transform: rotate(13deg); /* 初始位置 */
+    }
+    100% {
+        transform: rotate(38.6deg); /* 完成一圈 */
+    }
+}
+@keyframes rotateAndTranslate5 {
+    0% {
+        transform: rotate(38.6deg); /* 初始位置 */
+    }
+    100% {
+        transform: rotate(64.3deg); /* 完成一圈 */
+    }
+}
+@keyframes rotateAndTranslate6 {
+    0% {
+        transform: rotate(64.3deg); /* 初始位置 */
+    }
+    100% {
+        transform: rotate(90deg); /* 完成一圈 */
+    }
+}
