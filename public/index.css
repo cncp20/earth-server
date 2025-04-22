@@ -201,7 +201,8 @@ body {
     width: 16vw;
 	height: 16vw;
     animation-iteration-count: 1;
-    transform: rotate(-90deg)
+    transform: rotate(-90deg);
+    display: none;
 }
 .astronaut.ani0 {
     animation: rotateAndTranslate 3s linear;

@@ -27,10 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	setMid(2);
 	setOther(2);
     openWs();
-
-	// setTimeout(() => {
-	// 	setAnimation();
-	// }, 1000);
 });
 
 function setMid(index, weight=0) {
@@ -49,7 +45,7 @@ function clearOther() {
     const solarSystem = document.querySelector(".solar-system");
     solarSystem.innerHTML = "";
 }
-function setOther(index) {
+function setOther(index, weightMap = {}) {
 	const solarSystem = document.querySelector(".solar-system");
 	let otherPlanets = planets.filter((_, i) => i !== index);
 	otherPlanets.forEach((planet, index) => {
@@ -60,7 +56,7 @@ function setOther(index) {
                 <div class="planet-label">
                     <div class="planet-label-left">${planet.name}</div>
                     <div class="planet-label-right">
-                        我=${0}kg
+                        我≈${weightMap[planet.className] || 0}kg
                     </div>
                 </div>
             </div>
@@ -75,6 +71,7 @@ function setAnimation() {
 	let i = 0;
 	timer = setInterval(() => {
 		const astronaut = document.querySelector(".astronaut");
+        astronaut.style.display = "block"; // 显示宇航员
 		const previousElement = document.querySelector(`.ani${i - 1}`); // 获取上一个元素
 		if (previousElement) {
 			previousElement.classList.remove(`ani${i - 1}`); // 移除上一个类名
@@ -88,9 +85,26 @@ function setAnimation() {
 				clearInterval(timer); // 停止定时器
 			}
 		}
-	}, 5000);
+	}, 4000);
 }
-
+function clearAnimation() {
+    clearInterval(timer);
+    timer = null;
+    const astronaut = document.querySelector(".astronaut");
+    astronaut.style.transform = "rotate(-90deg)";
+    astronaut.style.display = "none";
+}
+function playAudio(url) {
+    let audio = new Audio(url);
+    audio.muted = true;
+    audio.play();
+    setTimeout(() => {
+        audio.muted = false;
+    }, 0);
+    audio.addEventListener("ended", () => {
+        audio = null; // 销毁对象
+    });
+}
 function openWs() {
 	socket = new WebSocket(`ws://${window.location.host}/weight`);
 	socket.onmessage = (event) => {
@@ -100,11 +114,19 @@ function openWs() {
             clearOther();
             setMid(2);
 	        setOther(2);
+            clearAnimation();
 		} else if (data.code === 1) {
             clearOther();
+            setMid(2);
+	        setOther(2);
+            playAudio('/audio/start.mp3')
+        } else if (data.code === 2) {
+            clearOther();
             let type = data.type
-            setMid(type, data.weight);
-	        setOther(type);
+            setMid(type, data.weight[planets[type].className]);
+	        setOther(type, data.weight);
+            playAudio('/audio/success.mp3');
+            setAnimation();
         }
 	};
 }
