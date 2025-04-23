@@ -1,0 +1,42 @@
+{
+    "weight_data": [
+        {
+            "id": "dq_weight",
+            "weight": 52300.00,
+            "note": "0",
+            "status": "1"
+        },
+        {
+            "id": "Moon",
+            "note": "0"
+        },
+        {
+            "id": "Mars",
+            "note": "0"
+        },
+        {
+            "id": "Venus1",
+            "note": "0"
+        },
+        {
+            "id": "Jupiter",
+            "note": "0"
+        },
+        {
+            "id": "Mercury",
+            "note": "0"
+        },
+        {
+            "id": "Saturn",
+            "note": "0"
+        },
+        {
+            "id": "Uranus",
+            "note": "0"
+        },
+        {
+            "id": "Neptune",
+            "note": "0"
+        }
+    ]
+}

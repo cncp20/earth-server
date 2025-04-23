@@ -1,5 +1,5 @@
 const WebSocket = require("ws");
-
+const data = require("./test.json");
 class ws {
 
 	static init(server) {
@@ -21,71 +21,46 @@ class ws {
 				const obj = { message: "连接成功", code: 200 };
 				ws.send(JSON.stringify(obj));
 
-                setTimeout(() => {
-                    let obj = {}
+                
+                let arr = data["weight_data"] || []
+                let hasPerson = arr.filter(item => item.note === "1");
+                if (hasPerson.length){
+                    // 有人在上面
+                    if (arr[0].status === "0") {
+                        // 正在称重
+                        ws.send(JSON.stringify({
+                            code: 1
+                        }));
+                    } else if (arr[0].status === "1") {
+                        // 数值稳定称重完成
+                        let earth = arr.find(item => item.id === "dq_weight")
+                        let weight = earth.weight / 1000; //kg
+                        let id = arr.find(item => item.note === "1").id
+                        let type = "";
+                        if (id === "dq_weight") {
+                            type = "earth";
+                        } else if (id === "Venus1") {
+                            type = "venus";
+                        } else {
+                            type = id.toLowerCase();
+                        }
+                        let obj = {}
                         Object.entries(weightMap).map(([key, value]) => {
-                            obj[key] = (value * 50).toFixed(0)
-                            return {
-                                name: key,
-                                value: Math.floor(Math.random() * 100) + 1,
-                                weight: value
-                            }
+                            obj[key] = (value * weight).toFixed(0)
                         })
                         ws.send(JSON.stringify({
                             code: 2,
-                            type: 2,
+                            type: Object.keys(weightMap).findIndex(item => item === type),
                             weight: obj
                         }));
-                }, 5000);
-                setTimeout(() => {
+                    }
+
+                } else{
+                    // 没人在上面
                     ws.send(JSON.stringify({
-                                code: 0
-                            }));
-                }, 10000);
-                setTimeout(() => {
-                    let obj = {}
-                        Object.entries(weightMap).map(([key, value]) => {
-                            obj[key] = (value * 50).toFixed(0)
-                            return {
-                                name: key,
-                                value: Math.floor(Math.random() * 100) + 1,
-                                weight: value
-                            }
-                        })
-                        ws.send(JSON.stringify({
-                            code: 2,
-                            type: 4,
-                            weight: obj
-                        }));
-                }, 20000);
-                // let count = 0;
-                // setInterval(() => {
-                //     if (count === 2) {
-                //         let obj = {}
-                //         Object.entries(weightMap).map(([key, value]) => {
-                //             obj[key] = (value * 50).toFixed(0)
-                //             return {
-                //                 name: key,
-                //                 value: Math.floor(Math.random() * 100) + 1,
-                //                 weight: value
-                //             }
-                //         })
-                //         ws.send(JSON.stringify({
-                //             code: 2,
-                //             type: 2,
-                //             weight: obj
-                //         }));
-                //     } else if (count === 1) {
-                //         ws.send(JSON.stringify({
-                //             code: 1
-                //         }));
-                //     } else {
-                //         ws.send(JSON.stringify({
-                //             code: 0
-                //         }));
-                //     }
-                //     count++;
-                // }, 3000);
+                        code: 0
+                    }));
+                }
 			} catch (error) {
 				console.log("websocket connection error", error);
 				return ws.close();
