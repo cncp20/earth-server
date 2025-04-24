@@ -39,13 +39,18 @@ class ws {
 
 			try {
                 let nowStatus = 0;
+                let nowType = null;
+                let tmpWeight = 0;
 				this.client.on("message", (topic, payload) => {
+
+
                     let data = JSON.parse(payload.toString());
 					let arr = data["weight_data"] || [];
-					let hasPerson = arr.filter((item) => item.note === "1");
-					if (hasPerson.length) {
+					let currentPlant = arr.filter((item) => item.note === "1");
+					if (currentPlant.length===1) {
 						// 有人在上面
-						if (arr[0].status === "0") {
+                        let {id, status} = currentPlant[0];
+						if (id === "dq_weight" && status === "0") {
 							// 正在称重
                             if (nowStatus === 0) {
                                 console.log(1, payload.toString());
@@ -56,27 +61,33 @@ class ws {
                                     })
                                 );
                             }
-						} else if (arr[0].status === "1") {
+						} else {
 							// 数值稳定称重完成
-                            if (nowStatus !== 2) {
-                                console.log(2, payload.toString());
-                                nowStatus = 2;
-                                let earth = arr.find(
-                                    (item) => item.id === "dq_weight"
-                                );
-                                let weight = earth.weight / 1000; //kg
-                                let id = arr.find((item) => item.note === "1").id;
-                                let type = "";
-                                if (hasPerson.length === 2) {
-                                    id = hasPerson[1].id;
-                                }
+                            console.log(2, payload.toString());
+                            nowStatus = 2;
+                            let weight = 0;
+                            let type = "";
+                            if (id === "dq_weight") {
+                                type = "earth";
+                            } else if (id === "Venus1") {
+                                type = "venus";
+                            } else {
+                                type = id.toLowerCase();
+                            }
+                            if (nowType !== type) {
+                                // 星球切换了才发送消息给前端
+                                nowType = type;
                                 if (id === "dq_weight") {
-                                    type = "earth";
-                                } else if (id === "Venus1") {
-                                    type = "venus";
+                                    weight = currentPlant[0].weight / 1000; //kg
+                                    tmpWeight = weight;
+                                    setTimeout(() => {
+                                        tmpWeight = 0;
+                                        nowType = null;
+                                    }, 30000);
                                 } else {
-                                    type = id.toLowerCase();
+                                    weight = tmpWeight;
                                 }
+                                
                                 let obj = {};
                                 Object.entries(weightMap).map(([key, value]) => {
                                     obj[key] = (value * weight).toFixed(0);
@@ -91,10 +102,11 @@ class ws {
                                     })
                                 );
                             }
+
 						}
 					} else {
-						// 没人在上面
-                        if (nowStatus !== 0) {
+						// 没人在上面或者正在移动
+                        if (nowStatus !== 0 && !tmpWeight) {
                             console.log(0, payload.toString());
                             nowStatus = 0;
                             ws.send(

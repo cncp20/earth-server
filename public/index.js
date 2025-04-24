@@ -49,7 +49,7 @@ function setMid(index, weight=0) {
 	const midLabel = document.querySelector(".mid-label-left");
 	midLabel.innerText = planet.name;
 	const midWeight = document.querySelector(".mid-weight");
-	midWeight.innerText = weight + "";
+	midWeight.innerText = `${index === 2 ? '=' : '≈'}${weight}`;
 	if (index === 5) {
 		mid.style.boxShadow = "none";
 	}
@@ -69,7 +69,7 @@ function setOther(index, weightMap = {}) {
                 <div class="planet-label">
                     <div class="planet-label-left">${planet.name}</div>
                     <div class="planet-label-right">
-                        我≈${weightMap[planet.className] || 0}kg
+                        我${planet.className==="earth" ? "=" : "≈"}${weightMap[planet.className] || 0}kg
                     </div>
                 </div>
             </div>
@@ -147,7 +147,9 @@ function openWs() {
             newPlant = type;
             setMid(type, data.weight[planets[type].className]);
 	        setOther(type, data.weight);
-            playAudio('/audio/success.mp3');
+            if (type === 2) {
+                playAudio('/audio/success.mp3');
+            }
             // setAnimation();
         }
 	};
