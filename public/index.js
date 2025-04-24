@@ -27,7 +27,20 @@ document.addEventListener("DOMContentLoaded", function () {
 	setMid(2);
 	setOther(2);
     openWs();
+    initClick()
 });
+function initClick() {
+    const btn = document.querySelector("#btn");
+    btn.addEventListener("click", () => {
+        let audio = new Audio('/audio/start.mp3');
+        audio.muted = true;
+        audio.play();
+        audio.addEventListener("ended", () => {
+            audio = null; // 销毁对象
+        });
+        btn.style.display="none";
+    })
+}
 
 function setMid(index, weight=0) {
 	const planet = planets[index];
@@ -66,7 +79,6 @@ function setOther(index, weightMap = {}) {
 		solarSystem.appendChild(planetElement);
 	});
 }
-
 function setAnimation() {
 	let i = 0;
 	timer = setInterval(() => {
@@ -93,6 +105,12 @@ function clearAnimation() {
     const astronaut = document.querySelector(".astronaut");
     astronaut.style.transform = "rotate(-90deg)";
     astronaut.style.display = "none";
+    for (let i = 0; i < 7; i++) {
+        const previousElement = document.querySelector(`.ani${i}`); // 获取上一个元素
+        if (previousElement) {
+            previousElement.classList.remove(`ani${i}`); // 移除上一个类名
+        }
+    }
 }
 function playAudio(url) {
     let audio = new Audio(url);
@@ -107,26 +125,30 @@ function playAudio(url) {
 }
 function openWs() {
 	socket = new WebSocket(`ws://${window.location.host}/weight`);
+    let newPlant = 2;
 	socket.onmessage = (event) => {
 		// 处理接收到的消息
 		const data = JSON.parse(event.data);
 		if (data.code === 0) {
             clearOther();
-            setMid(2);
-	        setOther(2);
-            clearAnimation();
+            setMid(newPlant);
+	        setOther(newPlant);
+            // clearAnimation();
 		} else if (data.code === 1) {
             clearOther();
-            setMid(2);
-	        setOther(2);
+            setMid(newPlant);
+	        setOther(newPlant);
             playAudio('/audio/start.mp3')
+            // clearAnimation();
         } else if (data.code === 2) {
+            // clearAnimation();
             clearOther();
             let type = data.type
+            newPlant = type;
             setMid(type, data.weight[planets[type].className]);
 	        setOther(type, data.weight);
             playAudio('/audio/success.mp3');
-            setAnimation();
+            // setAnimation();
         }
 	};
 }

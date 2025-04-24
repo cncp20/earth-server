@@ -3,12 +3,12 @@
         {
             "id": "dq_weight",
             "weight": 52300.00,
-            "note": "0",
+            "note": "1",
             "status": "1"
         },
         {
             "id": "Moon",
-            "note": "0"
+            "note": "1"
         },
         {
             "id": "Mars",

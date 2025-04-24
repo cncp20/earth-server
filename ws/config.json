@@ -1,0 +1,7 @@
+{
+    "host": "47.115.226.99",
+    "port": 1883,
+    "topic": "sensor/data",
+    "username": "tz",
+    "password": "123.0321"
+}
