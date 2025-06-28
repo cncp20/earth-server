@@ -69,6 +69,9 @@ body {
 .planet-label-right {
     background: #bbb;
 }
+.has-stand .planet-label-right {
+    background: #4fcbe4;
+}
 
 .planet-body {
 	position: absolute;
@@ -150,13 +153,19 @@ body {
 }
 
 .planet {
-	width: 16vw;
+	position: relative;
+	left: 50vw;
+}
+.planet-img {
+    width: 16vw;
 	height: 16vw;
 	border-radius: 50%;
 	background-size: cover;
-	position: relative;
-	left: 50vw;
-	box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    position: relative;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+.has-stand {
+    transform: scale(0.8);
 }
 .mercury {
 	background-image: url("./images/mercury.png");

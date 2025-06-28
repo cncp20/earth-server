@@ -1,13 +1,13 @@
 const planets = [
-	{ name: "水星", className: "mercury" },
-	{ name: "金星", className: "venus" },
-	{ name: "地球", className: "earth" },
-	{ name: "火星", className: "mars" },
-	{ name: "木星", className: "jupiter" },
-	{ name: "土星", className: "saturn" },
-	{ name: "天王星", className: "uranus" },
-	{ name: "海王星", className: "neptune" },
-	{ name: "月球", className: "moon" },
+	{ name: "水星", className: "mercury", hasStand: false },
+	{ name: "金星", className: "venus", hasStand: false },
+	{ name: "地球", className: "earth", hasStand: false },
+	{ name: "火星", className: "mars", hasStand: false },
+	{ name: "木星", className: "jupiter", hasStand: false },
+	{ name: "土星", className: "saturn", hasStand: false },
+	{ name: "天王星", className: "uranus", hasStand: false },
+	{ name: "海王星", className: "neptune", hasStand: false },
+	{ name: "月球", className: "moon", hasStand: false },
 ];
 const degMap = {
 	0: "rotate(-64.3deg)",
@@ -42,8 +42,13 @@ function initClick() {
     })
 }
 
-function setMid(index, weight=0) {
+function setMid(index, weight) {
 	const planet = planets[index];
+    if (weight === undefined) {
+        weight = 0
+    } else {
+        planet.hasStand = true;
+    }
 	const mid = document.querySelector(".mid");
 	mid.style.backgroundImage = `url('./images/${planet.className}.png')`;
 	const midLabel = document.querySelector(".mid-label-left");
@@ -65,11 +70,12 @@ function setOther(index, weightMap = {}) {
 		const planetElement = document.createElement("div");
 		planetElement.className = `planet-body rotate${index}`;
 		planetElement.innerHTML = `
-            <div class="planet ${planet.className}">
-                <div class="planet-label">
+            <div class="planet">
+                <div class="planet-img ${planet.className} ${planet.hasStand ? 'has-stand' : ''}"></div>
+                <div class="planet-label ${planet.hasStand ? 'has-stand' : ''}">
                     <div class="planet-label-left">${planet.name}</div>
                     <div class="planet-label-right">
-                        我${planet.className==="earth" ? "=" : "≈"}${weightMap[planet.className] || 0}kg
+                        我${planet.className==="earth" ? "=" : "≈"}${planet.hasStand && weightMap[planet.className] ? weightMap[planet.className] : 0}kg
                     </div>
                 </div>
             </div>
@@ -79,26 +85,27 @@ function setOther(index, weightMap = {}) {
 		solarSystem.appendChild(planetElement);
 	});
 }
-function setAnimation() {
-	let i = 0;
-	timer = setInterval(() => {
-		const astronaut = document.querySelector(".astronaut");
-        astronaut.style.display = "block"; // 显示宇航员
-		const previousElement = document.querySelector(`.ani${i - 1}`); // 获取上一个元素
-		if (previousElement) {
-			previousElement.classList.remove(`ani${i - 1}`); // 移除上一个类名
-		}
-		if (astronaut) {
-			astronaut.classList.add(`ani${i}`); // 添加当前类名
-			astronaut.style.transform = degMap[i]; // 设置旋转角度
-			i++;
-			if (i > 6) {
-				// 假设有 5 个动画步骤
-				clearInterval(timer); // 停止定时器
-			}
-		}
-	}, 4000);
-}
+// 宇航员动画
+// function setAnimation() {
+// 	let i = 0;
+// 	timer = setInterval(() => {
+// 		const astronaut = document.querySelector(".astronaut");
+//         astronaut.style.display = "block"; // 显示宇航员
+// 		const previousElement = document.querySelector(`.ani${i - 1}`); // 获取上一个元素
+// 		if (previousElement) {
+// 			previousElement.classList.remove(`ani${i - 1}`); // 移除上一个类名
+// 		}
+// 		if (astronaut) {
+// 			astronaut.classList.add(`ani${i}`); // 添加当前类名
+// 			astronaut.style.transform = degMap[i]; // 设置旋转角度
+// 			i++;
+// 			if (i > 6) {
+// 				// 假设有 5 个动画步骤
+// 				clearInterval(timer); // 停止定时器
+// 			}
+// 		}
+// 	}, 4000);
+// }
 function clearAnimation() {
     clearInterval(timer);
     timer = null;
@@ -130,12 +137,17 @@ function openWs() {
 		// 处理接收到的消息
 		const data = JSON.parse(event.data);
 		if (data.code === 0) {
+            // 没人在上面或者正在移动到其他称上
             clearOther();
             setMid(newPlant);
 	        setOther(newPlant);
             // clearAnimation();
 		} else if (data.code === 1) {
+            newPlant = 2;
             clearOther();
+            planets.forEach((planet) => {
+                planet.hasStand = false;
+            });
             setMid(newPlant);
 	        setOther(newPlant);
             playAudio('/audio/start.mp3')
