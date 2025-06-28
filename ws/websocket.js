@@ -47,7 +47,7 @@ class ws {
                         let arr = data["weight_data"] || [];
                         let currentPlant = arr.filter((item) => item.note === "1");
                         if (currentPlant.length===1) {
-                            // 有人在上面
+                            // 有人 在上面
                             let {id, status} = currentPlant[0];
                             if (id === "dq_weight" && status === "0") {
                                 // 正在称重
